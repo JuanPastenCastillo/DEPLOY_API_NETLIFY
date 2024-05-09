@@ -3,7 +3,9 @@ const ROUTES_TO_FETCH_DEV = {
 }
 
 const ROUTES_TO_FETCH_PROD = {
-  render: "https://deploy-api-render.onrender.com"
+  render: "https://deploy-api-render.onrender.com",
+  netlify:
+    "https://663d5dd9d74ff673e7d72467--voluble-sfogliatella-08c09e.netlify.app"
 }
 
 const f_movies_default = document.querySelector(".fetch-movies")
@@ -20,7 +22,7 @@ document.addEventListener("click", async (e) => {
     const toShowFetchedOnDOM_default = document.querySelector(".f-movies-show")
     try {
       const getData = await fetch(
-        `${ROUTES_TO_FETCH_PROD.render}/${foundToFetch}`
+        `${ROUTES_TO_FETCH_PROD.netlify}/${foundToFetch}`
       )
       // const getData = await fetch(`${ROUTES_TO_FETCH_DEV.dev}/${foundToFetch}`)
       const contentType = getData.headers.get("Content-Type")
@@ -92,7 +94,7 @@ document.addEventListener("click", async (e) => {
     const foundToKeys = document.querySelector(".fetched-keys")
 
     try {
-      const getData = await fetch(`${ROUTES_TO_FETCH_PROD.render}/movies/keys`)
+      const getData = await fetch(`${ROUTES_TO_FETCH_PROD.netlify}/movies/keys`)
       // const getData = await fetch(`${ROUTES_TO_FETCH_DEV.dev}/movies/keys`)
 
       const { keys } = await getData.json()
@@ -126,7 +128,7 @@ document.addEventListener("click", async (e) => {
     const toDOM = document.querySelector(".fetched-filters")
 
     const getData = await fetch(
-      `${ROUTES_TO_FETCH_PROD.render}/${foundToFetchWithFilters}`
+      `${ROUTES_TO_FETCH_PROD.netlify}/${foundToFetchWithFilters}`
     )
     /*
     const getData = await fetch(

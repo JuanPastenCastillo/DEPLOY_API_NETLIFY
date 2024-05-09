@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@netlify/functions": "^2.6.3",
     "cors": "2.8.5",
     "express": "4.19.2",
+    "netlify-cli": "17.23.2",
+    "serverless-http": "^3.2.0",
     "zod": "3.23.5"
   },
   "devDependencies": {
