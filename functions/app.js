@@ -4,13 +4,14 @@ import cors from "cors"
 import express from "express"
 import crypto from "node:crypto"
 import serverless from "serverless-http"
-import allMoviesJSON from "../data/movies.json"
-import { validateMovie, validatePartialMovies } from "../schemas/movies"
-import { formatResponse } from "../utils/formatResponse"
-import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams"
-import { toJSON } from "../utils/toJSON"
+import { allMoviesJSON } from "../data/movies.js"
+// import { validateMovie, validatePartialMovies } from "../schemas/movies"
+import { validateMovie, validatePartialMovies } from "../schemas/movies.js"
+import { formatResponse } from "../utils/formatResponse.js"
+import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams.js"
+import { originChecked } from "../utils/originChecked.js"
+import { toJSON } from "../utils/toJSON.js"
 
-// import { originChecked } from "../utils/originChecked"
 // const serverless = require("serverless-http")
 // const crypto = require("node:crypto")
 // const cors = require("cors")

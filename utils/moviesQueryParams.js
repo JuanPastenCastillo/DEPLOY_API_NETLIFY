@@ -1,6 +1,6 @@
 /* node --watch class-3/moviesQueryParams.js */
 
-export const QUERY_KEYS_TYPE = {
+const QUERY_KEYS_TYPE = {
   isStringArr: "isStringArr",
   isStringDef: "isStringDef",
   isBoolean: "isBoolean",
@@ -8,7 +8,7 @@ export const QUERY_KEYS_TYPE = {
   isSpecificFormat: "isSpecificFormat"
 }
 
-const QUERY_KEYS = {
+export const QUERY_KEYS = {
   GENRE: {
     key: "genre",
     type: QUERY_KEYS_TYPE.isStringArr,
