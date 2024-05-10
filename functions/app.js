@@ -222,7 +222,7 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
 })
 
 app.use(`/.netlify/functions/app`, router)
-app.use(`/.netlify/functions/app`, app)
+// app.use(`/.netlify/functions/app`, app)
 
 export const handler = serverless(app)
 
