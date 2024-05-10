@@ -36,7 +36,7 @@ const ACCEPTED_ORIGINS = [
   "http://localhost:3000",
   "https://movies.com", // This could be the production
   "https://main--voluble-sfogliatella-08c09e.netlify.app/.netlify/functions/app", // This could be the production
-  "https://main--voluble-sfogliatella-08c09e.netlify.app",
+  // "https://main--voluble-sfogliatella-08c09e.netlify.app",
   "https://juanpastencastillo.com"
 ]
 
