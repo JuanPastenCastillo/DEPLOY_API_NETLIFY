@@ -5,7 +5,6 @@ import express from "express"
 import crypto from "node:crypto"
 import serverless from "serverless-http"
 import { allMoviesJSON } from "../data/movies.js"
-import { router_movies } from "../routes/movies.js"
 import { validateMovie, validatePartialMovies } from "../schemas/movies.js"
 import { originChecked } from "../utils/originChecked.js"
 import { toJSON } from "../utils/toJSON.js"
@@ -25,7 +24,7 @@ const router = express.Router()
 app.disable("x-powered-by")
 
 const ROUTES = {
-  MOVIES: "/movies",
+  MOVIES: "movies",
   HOME: "/"
 }
 
@@ -123,54 +122,54 @@ app.use((req, res, next) => {
   }
 })
 
-app.get(ROUTES.MOVIES, router_movies)
+// app.get(ROUTES.MOVIES, router_movies)
 
-// app.get(ROUTES.MOVIES, (req, res) => {
-//   const { page, limit } = req.query
-//   const pageFormatted = page ? parseInt(page, 10) : 1
-//   const limitFormatted = limit ? parseInt(limit, 10) : 10
+app.get(`/.netlify/functions/app/${ROUTES.MOVIES}`, (req, res) => {
+  const { page, limit } = req.query
+  const pageFormatted = page ? parseInt(page, 10) : 1
+  const limitFormatted = limit ? parseInt(limit, 10) : 10
 
-//   const offset = page ? (pageFormatted - 1) * limitFormatted : 0
+  const offset = page ? (pageFormatted - 1) * limitFormatted : 0
 
-//   const pagination = {
-//     pageFormatted,
-//     limitFormatted,
-//     offset
-//   }
-//   const dataFiltered = moviesQueryParams(
-//     {
-//       allQueries: req.query,
-//       dataToFilter: allMoviesJSON
-//     },
-//     { pagination }
-//   )
+  const pagination = {
+    pageFormatted,
+    limitFormatted,
+    offset
+  }
+  const dataFiltered = moviesQueryParams(
+    {
+      allQueries: req.query,
+      dataToFilter: allMoviesJSON
+    },
+    { pagination }
+  )
 
-//   formatResponse({
-//     _actualFormat: req._format,
-//     theResMethod: res,
-//     theResBody: dataFiltered
-//   })
-// })
+  formatResponse({
+    _actualFormat: req._format,
+    theResMethod: res,
+    theResBody: dataFiltered
+  })
+})
 
-// app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
-//   const { id } = req.params
+app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+  const { id } = req.params
 
-//   if (id.toLowerCase() === "keys") {
-//     return res.status(200).send({ keys: QUERY_KEYS })
-//   }
+  if (id.toLowerCase() === "keys") {
+    return res.status(200).send({ keys: QUERY_KEYS })
+  }
 
-//   const movie = allMoviesJSON.find((movie) => movie.id === id)
-//   console.log("movie:", movie)
-//   if (!movie) {
-//     return res.status(404).send({ error: `Movie not found with id «${id}»` })
-//   } else {
-//     formatResponse({
-//       _actualFormat: req._format,
-//       theResMethod: res,
-//       theResBody: movie
-//     })
-//   }
-// })
+  const movie = allMoviesJSON.find((movie) => movie.id === id)
+  console.log("movie:", movie)
+  if (!movie) {
+    return res.status(404).send({ error: `Movie not found with id «${id}»` })
+  } else {
+    formatResponse({
+      _actualFormat: req._format,
+      theResMethod: res,
+      theResBody: movie
+    })
+  }
+})
 
 app.post(ROUTES.MOVIES, (req, res) => {
   const requestValidated = validateMovie({ objectToValidate: req.body })
@@ -237,7 +236,11 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
 app.use(`/.netlify/functions/app`, router)
 // app.use(`/.netlify/functions/app`, app)
 
-export const handler = serverless(app)
+const handler = serverless(app)
+module.exports.handler = async (event, context) => {
+  const result = await handler(event, context)
+  return result
+}
 
 const PORT = process.env.PORT ?? 3000
 app.listen(PORT, () => {
