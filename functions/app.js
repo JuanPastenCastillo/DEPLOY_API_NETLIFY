@@ -27,8 +27,8 @@ app.disable("x-powered-by")
 const PREFIX_ROUTES = "/.netlify/functions/app"
 
 const ROUTES = {
-  MOVIES: `${PREFIX_ROUTES}/movies`,
-  HOME: `${PREFIX_ROUTES}/`
+  MOVIES: `movies`,
+  HOME: `/`
 }
 
 const ACCEPTED_ORIGINS = [
@@ -36,7 +36,6 @@ const ACCEPTED_ORIGINS = [
   "http://localhost:3000",
   "https://movies.com", // This could be the production
   "https://main--voluble-sfogliatella-08c09e.netlify.app/.netlify/functions/app", // This could be the production
-  // "https://main--voluble-sfogliatella-08c09e.netlify.app",
   "https://juanpastencastillo.com"
 ]
 
@@ -128,7 +127,7 @@ app.use((req, res, next) => {
 
 // app.get(ROUTES.MOVIES, router_movies)
 
-app.get(`${ROUTES.MOVIES}`, (req, res) => {
+app.get(`/.netlify/functions/app/${ROUTES.MOVIES}`, (req, res) => {
   const { page, limit } = req.query
   const pageFormatted = page ? parseInt(page, 10) : 1
   const limitFormatted = limit ? parseInt(limit, 10) : 10
@@ -155,7 +154,7 @@ app.get(`${ROUTES.MOVIES}`, (req, res) => {
   })
 })
 
-app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+app.get(`/.netlify/functions/app/${ROUTES.MOVIES}/:id`, (req, res) => {
   const { id } = req.params
 
   if (id.toLowerCase() === "keys") {
