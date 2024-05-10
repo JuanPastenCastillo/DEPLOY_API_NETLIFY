@@ -4,7 +4,8 @@ const ROUTES_TO_FETCH_DEV = {
 
 const ROUTES_TO_FETCH_PROD = {
   render: "https://deploy-api-render.onrender.com",
-  netlify: "https://main--voluble-sfogliatella-08c09e.netlify.app"
+  netlify:
+    "https://main--voluble-sfogliatella-08c09e.netlify.app/.netlify/functions/app"
 }
 
 const f_movies_default = document.querySelector(".fetch-movies")

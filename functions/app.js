@@ -3,7 +3,7 @@
 const express = require("express")
 const serverless = require("serverless-http")
 const crypto = require("node:crypto")
-const cors = require("cors")
+// const cors = require("cors")
 const { validateMovie, validatePartialMovies } = require("../schemas/movies")
 const allMoviesJSON = require("../data/movies.json")
 const { toJSON } = require("../utils/toJSON")
@@ -12,7 +12,7 @@ const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
 // const { originChecked } = require("../utils/originChecked")
 
 const app = express()
-app.use(cors())
+// app.use(cors())
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -24,7 +24,7 @@ const ACCEPTED_ORIGINS = [
   "http://localhost:8080",
   "http://localhost:3000",
   "https://movies.com", // This could be the production
-  "https://main--voluble-sfogliatella-08c09e.netlify.app", // This could be the production
+  "https://main--voluble-sfogliatella-08c09e.netlify.app/.netlify/functions/app", // This could be the production
   "https://juanpastencastillo.com"
 ]
 
@@ -41,7 +41,6 @@ app.get(ROUTES.HOME, (req, res) => {
 app.use((req, res, next) => {
   if (req.url.startsWith(ROUTES.MOVIES)) {
     if (req.method === "GET") {
-      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -52,7 +51,6 @@ app.use((req, res, next) => {
       }
 
       res.header("Access-Control-Allow-Origin", origin)
-      */
 
       const { format = "json" } = req.query
 
@@ -67,7 +65,6 @@ app.use((req, res, next) => {
     } else if (req.method === "POST" || req.method === "PATCH") {
       toJSON({ req, next })
     } else if (req.method === "DELETE" && /movies\/*/.test(req.url)) {
-      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -78,11 +75,9 @@ app.use((req, res, next) => {
       }
 
       res.header("Access-Control-Allow-Origin", origin)
-      */
 
       return next()
     } else if (req.method === "OPTIONS") {
-      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -91,7 +86,6 @@ app.use((req, res, next) => {
       if (!acceptedOrigin) {
         return res.status(403).send({ error: "Origin not accepted" })
       }
-      */
 
       res.header("Access-Control-Allow-Origin", origin)
       res.header(
@@ -215,10 +209,10 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
   return res.json({ message: `Movie deleted with id «${id}»` })
 })
 
-const PORT = process.env.PORT ?? 3000
-app.listen(PORT, () => {
-  console.log(`Server listening on port http://localhost:${PORT}`)
-})
+// const PORT = process.env.PORT ?? 3000
+// app.listen(PORT, () => {
+//   console.log(`Server listening on port http://localhost:${PORT}`)
+// })
 
 const router = express.Router()
 app.use(`/.netlify/functions/app`, router)
