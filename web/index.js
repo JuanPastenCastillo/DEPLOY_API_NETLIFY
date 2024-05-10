@@ -32,6 +32,7 @@ document.addEventListener("click", async (e) => {
         toShowFetchedOnDOM_default.innerHTML = htmlContent
       } else if (contentType.includes("application/json")) {
         const { data, ...rest } = await getData.json()
+        console.log("data:", data, rest)
 
         if (rest.error) {
           throw new Error(rest.error)

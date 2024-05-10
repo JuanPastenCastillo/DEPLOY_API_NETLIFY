@@ -1,6 +1,6 @@
 /* node --watch app.js */
 
-import cors from "cors"
+// import cors from "cors"
 import express from "express"
 import crypto from "node:crypto"
 import serverless from "serverless-http"
@@ -10,7 +10,6 @@ import { validateMovie, validatePartialMovies } from "../schemas/movies.js"
 import { formatResponse } from "../utils/formatResponse.js"
 import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams.js"
 import { originChecked } from "../utils/originChecked.js"
-import { toJSON } from "../utils/toJSON.js"
 
 // const serverless = require("serverless-http")
 // const crypto = require("node:crypto")
@@ -24,7 +23,7 @@ import { toJSON } from "../utils/toJSON.js"
 
 const app = express()
 const router = express.Router()
-app.use(cors())
+// app.use(cors())
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -113,7 +112,7 @@ app.use((req, res, next) => {
   }
 })
 
-router.get(ROUTES.MOVIES, (req, res) => {
+app.get(ROUTES.MOVIES, (req, res) => {
   const { page, limit } = req.query
   const pageFormatted = page ? parseInt(page, 10) : 1
   const limitFormatted = limit ? parseInt(limit, 10) : 10
@@ -140,7 +139,7 @@ router.get(ROUTES.MOVIES, (req, res) => {
   })
 })
 
-router.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
   const { id } = req.params
 
   if (id.toLowerCase() === "keys") {
@@ -148,6 +147,7 @@ router.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
   }
 
   const movie = allMoviesJSON.find((movie) => movie.id === id)
+  console.log("movie:", movie)
   if (!movie) {
     return res.status(404).send({ error: `Movie not found with id «${id}»` })
   } else {
@@ -221,11 +221,14 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
   return res.json({ message: `Movie deleted with id «${id}»` })
 })
 
-// const PORT = process.env.PORT ?? 3000
-// app.listen(PORT, () => {
-//   console.log(`Server listening on port http://localhost:${PORT}`)
-// })
-
 app.use(`/.netlify/functions/app`, router)
+app.use(`/.netlify/functions/app`, app)
 
 export const handler = serverless(app)
+
+/*
+const PORT = process.env.PORT ?? 3000
+app.listen(PORT, () => {
+  console.log(`Server listening on port http://localhost:${PORT}`)
+})
+*/
