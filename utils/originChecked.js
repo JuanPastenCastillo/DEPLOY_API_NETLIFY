@@ -1,6 +1,6 @@
 const HOST_API = "localhost:3000" // Same origin of API
 
-const originChecked = ({ req, ACCEPTED_ORIGINS }) => {
+export const originChecked = ({ req, ACCEPTED_ORIGINS }) => {
   const { origin = null, host = null } = req.headers
 
   return {
@@ -9,6 +9,6 @@ const originChecked = ({ req, ACCEPTED_ORIGINS }) => {
   }
 }
 
-module.exports = {
-  originChecked
-}
+// module.exports = {
+//   originChecked
+// }

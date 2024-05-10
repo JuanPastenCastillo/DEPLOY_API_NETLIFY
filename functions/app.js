@@ -1,17 +1,28 @@
 /* node --watch app.js */
 
+import cors from "cors"
+import express from "express"
+import crypto from "node:crypto"
 import serverless from "serverless-http"
-const express = require("express")
-const crypto = require("node:crypto")
-const cors = require("cors")
-const { validateMovie, validatePartialMovies } = require("../schemas/movies")
-const allMoviesJSON = require("../data/movies.json")
-const { toJSON } = require("../utils/toJSON")
-const { formatResponse } = require("../utils/formatResponse")
-const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
+import allMoviesJSON from "../data/movies.json"
+import { validateMovie, validatePartialMovies } from "../schemas/movies"
+import { formatResponse } from "../utils/formatResponse"
+import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams"
+import { toJSON } from "../utils/toJSON"
+
+// import { originChecked } from "../utils/originChecked"
+// const serverless = require("serverless-http")
+// const crypto = require("node:crypto")
+// const cors = require("cors")
+// const { validateMovie, validatePartialMovies } = require("../schemas/movies")
+// const allMoviesJSON = require("../data/movies.json")
+// const { toJSON } = require("../utils/toJSON")
+// const { formatResponse } = require("../utils/formatResponse")
+// const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
 // const { originChecked } = require("../utils/originChecked")
 
 const app = express()
+const router = express.Router()
 app.use(cors())
 app.disable("x-powered-by")
 
@@ -28,7 +39,7 @@ const ACCEPTED_ORIGINS = [
   "https://juanpastencastillo.com"
 ]
 
-app.get("/test", (req, res) => {
+router.get("/test", (req, res) => {
   res.json({
     hello: "test!"
   })
@@ -214,7 +225,6 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
 //   console.log(`Server listening on port http://localhost:${PORT}`)
 // })
 
-const router = express.Router()
 app.use(`/.netlify/functions/app`, router)
 
 export const handler = serverless(app)

@@ -1,6 +1,6 @@
 /* node --watch class-3/moviesQueryParams.js */
 
-const QUERY_KEYS_TYPE = {
+export const QUERY_KEYS_TYPE = {
   isStringArr: "isStringArr",
   isStringDef: "isStringDef",
   isBoolean: "isBoolean",
@@ -69,7 +69,10 @@ const QUERY_KEYS_LIST = Object.values(QUERY_KEYS).reduce((group, product) => {
   return group
 }, {})
 
-const moviesQueryParams = ({ allQueries, dataToFilter }, { pagination }) => {
+export const moviesQueryParams = (
+  { allQueries, dataToFilter },
+  { pagination }
+) => {
   let filteredQueries = Object.entries(allQueries)
     .filter(([key]) => {
       if (key === QUERY_KEYS?.[key.toUpperCase()]?.["key"]) return true
@@ -179,4 +182,4 @@ const moviesQueryParams = ({ allQueries, dataToFilter }, { pagination }) => {
   return objToReturn
 }
 
-module.exports = { moviesQueryParams, QUERY_KEYS }
+// module.exports = { moviesQueryParams, QUERY_KEYS }
