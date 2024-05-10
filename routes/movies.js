@@ -3,14 +3,14 @@ import { allMoviesJSON } from "../data/movies.js"
 import { formatResponse } from "../utils/formatResponse.js"
 import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams.js"
 
-export let router_movies = express.Router()
+export const router_movies = express.Router()
 
 const ROUTES = {
   MOVIES: "/movies",
   HOME: "/"
 }
 
-router_movies.get(ROUTES.MOVIES, (req, res) => {
+router_movies.route("/").get((req, res) => {
   const { page, limit } = req.query
   const pageFormatted = page ? parseInt(page, 10) : 1
   const limitFormatted = limit ? parseInt(limit, 10) : 10
@@ -37,7 +37,7 @@ router_movies.get(ROUTES.MOVIES, (req, res) => {
   })
 })
 
-router_movies.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+router_movies.route(`/:id`).get((req, res) => {
   const { id } = req.params
 
   if (id.toLowerCase() === "keys") {

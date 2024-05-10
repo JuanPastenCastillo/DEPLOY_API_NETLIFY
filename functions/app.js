@@ -123,7 +123,7 @@ app.use((req, res, next) => {
   }
 })
 
-app.use(router_movies)
+app.use(ROUTES.MOVIES, router_movies)
 
 // app.get(ROUTES.MOVIES, (req, res) => {
 //   const { page, limit } = req.query
