@@ -1,15 +1,14 @@
 /* node --watch app.js */
 
-// import cors from "cors"
+import cors from "cors"
 import express from "express"
 import crypto from "node:crypto"
 import serverless from "serverless-http"
 import { allMoviesJSON } from "../data/movies.js"
-// import { validateMovie, validatePartialMovies } from "../schemas/movies"
+import { router_movies } from "../routes/movies.js"
 import { validateMovie, validatePartialMovies } from "../schemas/movies.js"
-import { formatResponse } from "../utils/formatResponse.js"
-import { QUERY_KEYS, moviesQueryParams } from "../utils/moviesQueryParams.js"
 import { originChecked } from "../utils/originChecked.js"
+import { toJSON } from "../utils/toJSON.js"
 
 // const serverless = require("serverless-http")
 // const crypto = require("node:crypto")
@@ -23,7 +22,6 @@ import { originChecked } from "../utils/originChecked.js"
 
 const app = express()
 const router = express.Router()
-// app.use(cors())
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -39,6 +37,19 @@ const ACCEPTED_ORIGINS = [
   "https://juanpastencastillo.com"
 ]
 
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (ACCEPTED_ORIGINS.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  optionSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
+
 router.get("/test", (req, res) => {
   res.json({
     hello: "test!"
@@ -52,16 +63,16 @@ router.get(ROUTES.HOME, (req, res) => {
 app.use((req, res, next) => {
   if (req.url.startsWith(ROUTES.MOVIES)) {
     if (req.method === "GET") {
-      const { acceptedOrigin, origin } = originChecked({
-        req,
-        ACCEPTED_ORIGINS
-      })
+      // const { acceptedOrigin, origin } = originChecked({
+      //   req,
+      //   ACCEPTED_ORIGINS
+      // })
 
-      if (!acceptedOrigin) {
-        return res.status(403).send({ error: "Origin not accepted" })
-      }
+      // if (!acceptedOrigin) {
+      //   return res.status(403).send({ error: "Origin not accepted" })
+      // }
 
-      res.header("Access-Control-Allow-Origin", origin)
+      // res.header("Access-Control-Allow-Origin", origin)
 
       const { format = "json" } = req.query
 
@@ -112,52 +123,54 @@ app.use((req, res, next) => {
   }
 })
 
-app.get(ROUTES.MOVIES, (req, res) => {
-  const { page, limit } = req.query
-  const pageFormatted = page ? parseInt(page, 10) : 1
-  const limitFormatted = limit ? parseInt(limit, 10) : 10
+app.use(router_movies)
 
-  const offset = page ? (pageFormatted - 1) * limitFormatted : 0
+// app.get(ROUTES.MOVIES, (req, res) => {
+//   const { page, limit } = req.query
+//   const pageFormatted = page ? parseInt(page, 10) : 1
+//   const limitFormatted = limit ? parseInt(limit, 10) : 10
 
-  const pagination = {
-    pageFormatted,
-    limitFormatted,
-    offset
-  }
-  const dataFiltered = moviesQueryParams(
-    {
-      allQueries: req.query,
-      dataToFilter: allMoviesJSON
-    },
-    { pagination }
-  )
+//   const offset = page ? (pageFormatted - 1) * limitFormatted : 0
 
-  formatResponse({
-    _actualFormat: req._format,
-    theResMethod: res,
-    theResBody: dataFiltered
-  })
-})
+//   const pagination = {
+//     pageFormatted,
+//     limitFormatted,
+//     offset
+//   }
+//   const dataFiltered = moviesQueryParams(
+//     {
+//       allQueries: req.query,
+//       dataToFilter: allMoviesJSON
+//     },
+//     { pagination }
+//   )
 
-app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
-  const { id } = req.params
+//   formatResponse({
+//     _actualFormat: req._format,
+//     theResMethod: res,
+//     theResBody: dataFiltered
+//   })
+// })
 
-  if (id.toLowerCase() === "keys") {
-    return res.status(200).send({ keys: QUERY_KEYS })
-  }
+// app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+//   const { id } = req.params
 
-  const movie = allMoviesJSON.find((movie) => movie.id === id)
-  console.log("movie:", movie)
-  if (!movie) {
-    return res.status(404).send({ error: `Movie not found with id «${id}»` })
-  } else {
-    formatResponse({
-      _actualFormat: req._format,
-      theResMethod: res,
-      theResBody: movie
-    })
-  }
-})
+//   if (id.toLowerCase() === "keys") {
+//     return res.status(200).send({ keys: QUERY_KEYS })
+//   }
+
+//   const movie = allMoviesJSON.find((movie) => movie.id === id)
+//   console.log("movie:", movie)
+//   if (!movie) {
+//     return res.status(404).send({ error: `Movie not found with id «${id}»` })
+//   } else {
+//     formatResponse({
+//       _actualFormat: req._format,
+//       theResMethod: res,
+//       theResBody: movie
+//     })
+//   }
+// })
 
 app.post(ROUTES.MOVIES, (req, res) => {
   const requestValidated = validateMovie({ objectToValidate: req.body })
@@ -226,9 +239,7 @@ app.use(`/.netlify/functions/app`, router)
 
 export const handler = serverless(app)
 
-/*
 const PORT = process.env.PORT ?? 3000
 app.listen(PORT, () => {
   console.log(`Server listening on port http://localhost:${PORT}`)
 })
-*/
