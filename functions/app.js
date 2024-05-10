@@ -22,7 +22,6 @@ import { toJSON } from "../utils/toJSON.js"
 // const { originChecked } = require("../utils/originChecked")
 
 const app = express()
-const router = express.Router()
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -51,13 +50,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-router.get("/test", (req, res) => {
+app.get("/test", (req, res) => {
   res.json({
     hello: "test!"
   })
 })
 
-router.get(ROUTES.HOME, (req, res) => {
+app.get(ROUTES.HOME, (req, res) => {
   res.json({ message: "This is the endpoint for home" })
 })
 
@@ -153,7 +152,7 @@ app.get(`/.netlify/functions/app/${ROUTES.MOVIES}`, (req, res) => {
   })
 })
 
-app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+app.get(`/.netlify/functions/app/${ROUTES.MOVIES}/:id`, (req, res) => {
   const { id } = req.params
 
   if (id.toLowerCase() === "keys") {
@@ -234,9 +233,6 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
   allMoviesJSON.splice(movieIndex, 1)
   return res.json({ message: `Movie deleted with id «${id}»` })
 })
-
-app.use(`/.netlify/functions/app`, router)
-// app.use(`/.netlify/functions/app`, app)
 
 const handler = serverless(app)
 module.exports.handler = async (event, context) => {
