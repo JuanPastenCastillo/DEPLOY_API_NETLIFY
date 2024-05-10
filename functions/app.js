@@ -127,7 +127,7 @@ app.use((req, res, next) => {
 
 // app.get(ROUTES.MOVIES, router_movies)
 
-app.get(`${ROUTES.MOVIES}`, (req, res) => {
+app.get(ROUTES.MOVIES, (req, res) => {
   const { page, limit } = req.query
   const pageFormatted = page ? parseInt(page, 10) : 1
   const limitFormatted = limit ? parseInt(limit, 10) : 10
