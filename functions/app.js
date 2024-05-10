@@ -45,7 +45,7 @@ router.get("/test", (req, res) => {
   })
 })
 
-app.get(ROUTES.HOME, (req, res) => {
+router.get(ROUTES.HOME, (req, res) => {
   res.json({ message: "This is the endpoint for home" })
 })
 
@@ -112,7 +112,7 @@ app.use((req, res, next) => {
   }
 })
 
-app.get(ROUTES.MOVIES, (req, res) => {
+router.get(ROUTES.MOVIES, (req, res) => {
   const { page, limit } = req.query
   const pageFormatted = page ? parseInt(page, 10) : 1
   const limitFormatted = limit ? parseInt(limit, 10) : 10
@@ -139,7 +139,7 @@ app.get(ROUTES.MOVIES, (req, res) => {
   })
 })
 
-app.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
+router.get(`${ROUTES.MOVIES}/:id`, (req, res) => {
   const { id } = req.params
 
   if (id.toLowerCase() === "keys") {
