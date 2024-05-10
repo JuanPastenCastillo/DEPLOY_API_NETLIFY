@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Deploy API express on render.com",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "startnode": "node app.js",
     "start": "node functions/app.js",

@@ -1,9 +1,9 @@
 /* node --watch app.js */
 
+import serverless from "serverless-http"
 const express = require("express")
-const serverless = require("serverless-http")
 const crypto = require("node:crypto")
-// const cors = require("cors")
+const cors = require("cors")
 const { validateMovie, validatePartialMovies } = require("../schemas/movies")
 const allMoviesJSON = require("../data/movies.json")
 const { toJSON } = require("../utils/toJSON")
@@ -12,7 +12,7 @@ const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
 // const { originChecked } = require("../utils/originChecked")
 
 const app = express()
-// app.use(cors())
+app.use(cors())
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -217,5 +217,4 @@ app.delete(`${ROUTES.MOVIES}/:id`, (req, res) => {
 const router = express.Router()
 app.use(`/.netlify/functions/app`, router)
 
-module.exports = app
-module.exports.handler = serverless(app)
+export const handler = serverless(app)
