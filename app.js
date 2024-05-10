@@ -3,7 +3,7 @@
 const express = require("express")
 const serverless = require("serverless-http")
 const crypto = require("node:crypto")
-const cors = require("cors")
+// const cors = require("cors")
 const { validateMovie, validatePartialMovies } = require("./schemas/movies")
 const allMoviesJSON = require("./data/movies.json")
 const { toJSON } = require("./utils/toJSON")
@@ -12,7 +12,6 @@ const { moviesQueryParams, QUERY_KEYS } = require("./utils/moviesQueryParams")
 const { originChecked } = require("./utils/originChecked")
 
 const app = express()
-const handler_serverless = serverless(api)
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -208,4 +207,5 @@ app.listen(PORT, () => {
   console.log(`Server listening on port http://localhost:${PORT}`)
 })
 
-module.exports = handler_serverless
+module.exports = app
+module.exports.handler = serverless(app)
