@@ -3,15 +3,16 @@
 const express = require("express")
 const serverless = require("serverless-http")
 const crypto = require("node:crypto")
-// const cors = require("cors")
+const cors = require("cors")
 const { validateMovie, validatePartialMovies } = require("../schemas/movies")
 const allMoviesJSON = require("../data/movies.json")
 const { toJSON } = require("../utils/toJSON")
 const { formatResponse } = require("../utils/formatResponse")
 const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
-const { originChecked } = require("../utils/originChecked")
+// const { originChecked } = require("../utils/originChecked")
 
 const app = express()
+app.use(cors())
 app.disable("x-powered-by")
 
 const ROUTES = {
@@ -40,6 +41,7 @@ app.get(ROUTES.HOME, (req, res) => {
 app.use((req, res, next) => {
   if (req.url.startsWith(ROUTES.MOVIES)) {
     if (req.method === "GET") {
+      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -50,6 +52,7 @@ app.use((req, res, next) => {
       }
 
       res.header("Access-Control-Allow-Origin", origin)
+      */
 
       const { format = "json" } = req.query
 
@@ -64,6 +67,7 @@ app.use((req, res, next) => {
     } else if (req.method === "POST" || req.method === "PATCH") {
       toJSON({ req, next })
     } else if (req.method === "DELETE" && /movies\/*/.test(req.url)) {
+      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -74,9 +78,11 @@ app.use((req, res, next) => {
       }
 
       res.header("Access-Control-Allow-Origin", origin)
+      */
 
       return next()
     } else if (req.method === "OPTIONS") {
+      /*
       const { acceptedOrigin, origin } = originChecked({
         req,
         ACCEPTED_ORIGINS
@@ -85,6 +91,7 @@ app.use((req, res, next) => {
       if (!acceptedOrigin) {
         return res.status(403).send({ error: "Origin not accepted" })
       }
+      */
 
       res.header("Access-Control-Allow-Origin", origin)
       res.header(
