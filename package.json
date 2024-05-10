@@ -4,9 +4,9 @@
   "description": "Deploy API express on render.com",
   "main": "app.js",
   "scripts": {
-    "start:node": "node app.js",
-    "build": "netlify-lambda build express",
-    "start": "nodemon server-local.js"
+    "startnode": "node app.js",
+    "start": "node functions/app.js",
+    "build": "netlify deploy --prod"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +14,9 @@
   "dependencies": {
     "@netlify/functions": "^2.6.3",
     "cors": "2.8.5",
-    "express": "4.19.2",
+    "express": "^4.19.2",
     "netlify-cli": "17.23.2",
+    "netlify-lambda": "^2.0.16",
     "serverless-http": "^3.2.0",
     "zod": "3.23.5"
   },

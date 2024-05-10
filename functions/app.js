@@ -4,12 +4,12 @@ const express = require("express")
 const serverless = require("serverless-http")
 const crypto = require("node:crypto")
 // const cors = require("cors")
-const { validateMovie, validatePartialMovies } = require("./schemas/movies")
-const allMoviesJSON = require("./data/movies.json")
-const { toJSON } = require("./utils/toJSON")
-const { formatResponse } = require("./utils/formatResponse")
-const { moviesQueryParams, QUERY_KEYS } = require("./utils/moviesQueryParams")
-const { originChecked } = require("./utils/originChecked")
+const { validateMovie, validatePartialMovies } = require("../schemas/movies")
+const allMoviesJSON = require("../data/movies.json")
+const { toJSON } = require("../utils/toJSON")
+const { formatResponse } = require("../utils/formatResponse")
+const { moviesQueryParams, QUERY_KEYS } = require("../utils/moviesQueryParams")
+const { originChecked } = require("../utils/originChecked")
 
 const app = express()
 app.disable("x-powered-by")
@@ -26,6 +26,12 @@ const ACCEPTED_ORIGINS = [
   "https://main--voluble-sfogliatella-08c09e.netlify.app", // This could be the production
   "https://juanpastencastillo.com"
 ]
+
+app.get("/test", (req, res) => {
+  res.json({
+    hello: "test!"
+  })
+})
 
 app.get(ROUTES.HOME, (req, res) => {
   res.json({ message: "This is the endpoint for home" })
@@ -206,6 +212,9 @@ const PORT = process.env.PORT ?? 3000
 app.listen(PORT, () => {
   console.log(`Server listening on port http://localhost:${PORT}`)
 })
+
+const router = express.Router()
+app.use(`/.netlify/functions/app`, router)
 
 module.exports = app
 module.exports.handler = serverless(app)
